@@ -1,0 +1,48 @@
+﻿@page "/covidst"
+@inject HttpClient Http
+
+<div class="d-flex justify-content-center">
+    <img src="../Images/descarga.jpg" alt="Image" style="width:80%; height:300px" />
+</div>
+<br />
+<div class="d-flex justify-content-center">
+    <h1>Frequently asked Questions on Covid-19</h1>
+</div>
+<hr />
+
+@if (questionList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @foreach (var question in questionList)
+    {
+        <div class="card">
+            <h3 class="card-header">
+                @question.Question
+            </h3>
+            <div class="card-body">
+                <p class="card-text">@question.Answer</p>
+            </div>
+        </div>
+        <br />
+    }
+}
+
+@code {
+
+    private ST[] questionList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        questionList = await Http.GetFromJsonAsync<ST[]>("https://faqfunctionapp20200611160123.azurewebsites.net/api/covidFAQ");
+    }
+
+    public class ST
+    {
+        public string Id { get; set; }
+        public string Question { get; set; }
+        public string Answer { get; set; }
+    }
+}
